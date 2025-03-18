@@ -1,0 +1,33 @@
+type Query {
+    jobs: [Job!]
+}
+"""
+Company main fileds
+"""
+type Company {
+    """ The company uniqueId """
+    id: ID!
+    """ The company name """
+    name: String!
+    """ The company descripn """
+    description: String
+}
+
+"""
+Job main fileds
+"""
+type Job {
+    """ Job unique id """
+    id: ID!
+    """ The company uniqueId """
+    companyId: ID!
+    """ The company data """
+    company: Company!
+    """ The __date__ when job was bublised """
+    date: String!
+    """ Job title"""
+    title: String!
+    """ Job description"""
+    description: String
+}
+
