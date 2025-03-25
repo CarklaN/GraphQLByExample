@@ -1,7 +1,7 @@
 type Query {
   company(id: ID!): Company
   job(id: ID!): Job
-jobs: [Job!]!
+  jobs: [Job!]
 }
 """
 Company main fileds
@@ -23,15 +23,12 @@ Job main fileds
 type Job {
     """ Job unique id """
     id: ID!
-    """ The company uniqueId """
-    companyId: ID!
-    """ The company data """
-    company: Company!
     """ The __date__ when job was bublised """
     date: String!
     """ Job title"""
     title: String!
+    """ The company data """
+    company: Company!
     """ Job description"""
     description: String
 }
-
