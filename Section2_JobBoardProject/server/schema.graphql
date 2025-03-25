@@ -1,7 +1,7 @@
 type Query {
   company(id: ID!): Company
   job(id: ID!): Job
-  jobs: [Job!]
+jobs: [Job!]!
 }
 """
 Company main fileds
@@ -13,6 +13,8 @@ type Company {
     name: String!
     """ The company descripn """
     description: String
+    """ List of the jobs by company """
+    jobs: [Job!]!
 }
 
 """

@@ -17,7 +17,7 @@ export async function getJob(id) {
             }
         }    
     `;
-    const {job} = await client.request(query, {id});
+    const { job } = await client.request(query, { id });
     return job;
 }
 
@@ -28,6 +28,11 @@ export async function getCompany(id) {
           id
           name
           description
+          jobs {
+            id
+            date
+            title
+          }
         }
       }
     `;

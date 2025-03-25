@@ -1,14 +1,17 @@
-import { useParams } from 'react-router';
 import { useEffect, useState } from 'react';
-import { getCompany } from '../../../server/db/companies';
+import { useParams } from 'react-router';
+import JobList from '../components/JobList';
+import { getCompany } from '../lib/graphql/queries';
 
 function CompanyPage() {
   const { companyId } = useParams();
   const [company, setCompany] = useState();
-  useEffect(()=>{
-    getCompany(companyId).then(setCompany)
+  useEffect(() => {
+    getCompany(companyId).then(setCompany);
   }, [companyId]);
-  if(!company) {
+
+  console.log('[CompanyPage] company:', company);
+  if (!company) {
     return <div>Loading...</div>;
   }
   return (
@@ -19,6 +22,10 @@ function CompanyPage() {
       <div className="box">
         {company.description}
       </div>
+      <h2 className="title is-5">
+        Jobs at {company.name}
+      </h2>
+      <JobList jobs={company.jobs} />
     </div>
   );
 }
