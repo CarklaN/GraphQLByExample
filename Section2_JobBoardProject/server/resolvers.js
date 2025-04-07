@@ -1,6 +1,6 @@
 import { GraphQLError } from 'graphql';
 import { getCompany } from './db/companies.js';
-import { getJob, getJobs, getJobsByCompany } from './db/jobs.js';
+import { createJob, deleteJob, getJob, getJobs, getJobsByCompany, updateJob } from './db/jobs.js';
 
 export const resolvers = {
   Query: {
@@ -21,6 +21,35 @@ export const resolvers = {
     jobs: () => getJobs()
   },
 
+  Mutation: {
+    createJob: (_root, { input: {title, description}}, { user }) => {
+      if(!user) {
+        throw unauthorizedError('Missing authentication');
+      }
+      return createJob({companyId: user.companyId, title, description})
+    },
+    deleteJob: async (_root, { id }, { user }) => {
+      if (!user) {
+        throw unauthorizedError('Missing authentication');
+      }
+      const job = await deleteJob(id, user.companyId);
+      if (!job) {
+        throw notFoundError('No Job found with id ' + id);
+      }
+      return job;
+    },
+    updateJob: async (_root, {input: {id, title, description}}, {user}) => {
+      if(!user){
+        throw unauthorizedError('Missing authentication');
+      }
+      const job = await updateJob({id, title, description, companyId: user.companyId});
+      if (!job) {
+        throw notFoundError('No Job found with id ' + id);
+      }
+      return job;
+    }
+  },
+
   Company: {
     jobs: (company) => getJobsByCompany(company.id),
   },
@@ -32,9 +61,15 @@ export const resolvers = {
 };
 
 function notFoundError(message) {
-    throw new GraphQLError("No Company found with id " + id, {
+    throw new GraphQLError(message, {
         extensions: { code: 'NOT_FOUND'},
     });
+}
+
+function unauthorizedError(message) {
+  throw new GraphQLError(message, {
+      extensions: { code: 'UNAUTHORIZED'},
+  });
 }
 
 function toIsoDate(value) {
